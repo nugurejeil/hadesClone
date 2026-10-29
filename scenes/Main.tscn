@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/Tree.tscn" id="2_tree"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="9_hud"]
 [ext_resource type="PackedScene" path="res://scenes/MagicMissile.tscn" id="10_missile"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyArrow.tscn" id="11_arrow"]
+[ext_resource type="PackedScene" path="res://scenes/Chest.tscn" id="12_chest"]
 
 [sub_resource type="StandardMaterial3D" id="GroundMaterial"]
 albedo_color = Color(0.3, 0.52, 0.22, 1)
@@ -124,6 +125,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -3)
 
 [node name="Tree12" parent="World/Trees" instance=ExtResource("2_tree")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 16)
+
+[node name="Chest" parent="World" instance=ExtResource("12_chest")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 4, 0, -4)
 
 [node name="SpawnPoints" type="Node3D" parent="World"]
 
