@@ -1,0 +1,131 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Tree.tscn" id="1_tree"]
+
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.3, 0.52, 0.22, 1)
+
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+material = SubResource("GroundMaterial")
+size = Vector2(40, 40)
+
+[sub_resource type="BoxShape3D" id="GroundShape"]
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxShape3D" id="WallShapeX"]
+size = Vector3(42, 4, 1)
+
+[sub_resource type="BoxShape3D" id="WallShapeZ"]
+size = Vector3(1, 4, 42)
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.2, 0.27, 0.22, 1)
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.4
+tonemap_mode = 2
+
+[node name="Main" type="Node3D"]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Ground" type="StaticBody3D" parent="World"]
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="World/Ground"]
+mesh = SubResource("GroundMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("GroundShape")
+
+[node name="Walls" type="Node3D" parent="World"]
+
+[node name="WallNorth" type="StaticBody3D" parent="World/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -20.5)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Walls/WallNorth"]
+shape = SubResource("WallShapeX")
+
+[node name="WallSouth" type="StaticBody3D" parent="World/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 20.5)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Walls/WallSouth"]
+shape = SubResource("WallShapeX")
+
+[node name="WallWest" type="StaticBody3D" parent="World/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5, 2, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Walls/WallWest"]
+shape = SubResource("WallShapeZ")
+
+[node name="WallEast" type="StaticBody3D" parent="World/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 2, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Walls/WallEast"]
+shape = SubResource("WallShapeZ")
+
+[node name="Trees" type="Node3D" parent="World"]
+
+[node name="Tree1" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -10)
+
+[node name="Tree2" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -15)
+
+[node name="Tree3" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -13)
+
+[node name="Tree4" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, -9)
+
+[node name="Tree5" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 5)
+
+[node name="Tree6" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 8)
+
+[node name="Tree7" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 15)
+
+[node name="Tree8" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 12)
+
+[node name="Tree9" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 9)
+
+[node name="Tree10" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 5)
+
+[node name="Tree11" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -3)
+
+[node name="Tree12" parent="World/Trees" instance=ExtResource("1_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 16)
+
+[node name="Sun" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(0.819152, 0.469846, -0.32899, 0, 0.573576, 0.819152, 0.573576, -0.67101, 0.469846, 0, 10, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 60.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
+environment = SubResource("Environment")
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 15, 21.2132, 15)
+projection = 1
+current = true
+size = 20.0
+far = 100.0

@@ -1,0 +1,18 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# 내보내기(Export) 결과물
+/build/
+/builds/
+*.pck
+*.exe
+*.x86_64
+*.dmg
+*.apk
+*.aab
+*.ipa
+export_credentials.cfg
+
+# OS
+.DS_Store
