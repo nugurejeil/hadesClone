@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/RangedEnemy.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/EnemyArrow.tscn" id="2_arrow"]
+
+[sub_resource type="CapsuleShape3D" id="Shape"]
+radius = 0.35
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="BodyMat"]
+albedo_color = Color(0.95, 0.55, 0.12, 1)
+
+[sub_resource type="CapsuleMesh" id="BodyMesh"]
+material = SubResource("BodyMat")
+radius = 0.35
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="NoseMat"]
+albedo_color = Color(0.15, 0.1, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="NoseMesh"]
+material = SubResource("NoseMat")
+size = Vector3(0.16, 0.16, 0.256)
+
+[node name="RangedEnemy" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+motion_mode = 1
+script = ExtResource("1_script")
+max_health = 20
+move_speed = 2.5
+windup_time = 0.5
+attack_interval = 2.0
+damage = 8
+arrow_scene = ExtResource("2_arrow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("Shape")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BodyMesh")
+
+[node name="Nose" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -0.35)
+mesh = SubResource("NoseMesh")
+
+[node name="HealthBar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+
+[node name="Back" type="Sprite3D" parent="HealthBar"]
+
+[node name="Fill" type="Sprite3D" parent="HealthBar"]

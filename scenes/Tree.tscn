@@ -23,7 +23,7 @@ bottom_radius = 1.5
 height = 2.8
 radial_segments = 16
 
-[node name="Tree" type="StaticBody3D"]
+[node name="Tree" type="StaticBody3D" groups=["tree"]]
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

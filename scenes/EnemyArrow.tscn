@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/EnemyArrow.gd" id="1_script"]
+
+[sub_resource type="SphereShape3D" id="Shape"]
+radius = 0.15
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+shading_mode = 0
+albedo_color = Color(1, 0.78, 0.3, 1)
+
+[sub_resource type="BoxMesh" id="Mesh"]
+material = SubResource("Mat")
+size = Vector3(0.1, 0.1, 0.6)
+
+[node name="EnemyArrow" type="Area3D"]
+collision_layer = 16
+collision_mask = 3
+monitorable = false
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("Mesh")
