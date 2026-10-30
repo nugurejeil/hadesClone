@@ -80,8 +80,8 @@ restart={
 
 [physics]
 
-common/physics_interpolation=true
 3d/physics_engine="Jolt Physics"
+common/physics_interpolation=true
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
 
 [rendering]
