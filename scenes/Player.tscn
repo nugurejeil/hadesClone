@@ -1,12 +1,26 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/MagicMissile.tscn" id="2_missile"]
-[ext_resource type="PackedScene" path="res://assets/characters/knight.glb" id="3_knight"]
 
 [sub_resource type="CapsuleShape3D" id="Shape"]
 radius = 0.4
 height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="BodyMat"]
+albedo_color = Color(0.2, 0.42, 0.95, 1)
+
+[sub_resource type="CapsuleMesh" id="BodyMesh"]
+material = SubResource("BodyMat")
+radius = 0.4
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="NoseMat"]
+albedo_color = Color(0.98, 0.85, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="NoseMesh"]
+material = SubResource("NoseMat")
+size = Vector3(0.2, 0.2, 0.3)
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 2
@@ -21,5 +35,10 @@ shape = SubResource("Shape")
 
 [node name="Visual" type="Node3D" parent="."]
 
-[node name="Knight" parent="Visual" instance=ExtResource("3_knight")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BodyMesh")
+
+[node name="Nose" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, -0.42)
+mesh = SubResource("NoseMesh")

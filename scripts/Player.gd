@@ -37,15 +37,6 @@ signal skill_used(skill: StringName, cooldown: float)
 @export var teleport_invincible_time := 0.3
 @export var teleport_cooldown := 3.0
 
-@export_group("Knight")
-## 검을 들고 있는지. 처음엔 없고, 보물상자가 열리면 equip_sword()로 든다.
-@export var has_sword := false
-## 공격 동작(punch, sword-slash)을 이 시간 안에 끝나도록 빠르게 재생한다
-@export var attack_anim_time := 0.4
-@export var run_anim_speed := 1.0
-## 멈춰 있을 때 보여 줄 달리기 동작의 시점(초). 걷기·대기 동작 없이 이 자세로 선다.
-@export var idle_pose_time := 0.0
-
 @export_group("")
 @export var projectiles: Node3D
 
@@ -66,21 +57,13 @@ var _melee_left := 0.0
 var _missile_left := 0.0
 var _teleport_left := 0.0
 var _dead := false
-var _moving := false
-var _attack_anim_left := 0.0
-## 지금 보여 주는 동작: &"run", &"idle", &"attack"
-var _anim_state := &""
 
 @onready var _visual: Node3D = $Visual
 @onready var _shape: CollisionShape3D = $CollisionShape3D
-@onready var _anim: AnimationPlayer = $Visual/Knight/AnimationPlayer
-@onready var _sword: Node3D = $Visual/Knight.find_child("Sword") as Node3D
 
 
 func _ready() -> void:
 	health = max_health
-	_sword.visible = has_sword
-	_update_animation()
 
 
 func _physics_process(delta: float) -> void:
@@ -89,13 +72,6 @@ func _physics_process(delta: float) -> void:
 	_tick_timers(delta)
 	_handle_skills()
 	_handle_movement()
-	_update_animation()
-
-
-## 보물상자가 열리면 부른다. 이때부터 검이 보이고 근접 공격이 칼질이 된다.
-func equip_sword() -> void:
-	has_sword = true
-	_sword.visible = true
 
 
 func is_alive() -> bool:
@@ -124,7 +100,6 @@ func _tick_timers(delta: float) -> void:
 	_melee_left = maxf(_melee_left - delta, 0.0)
 	_missile_left = maxf(_missile_left - delta, 0.0)
 	_teleport_left = maxf(_teleport_left - delta, 0.0)
-	_attack_anim_left = maxf(_attack_anim_left - delta, 0.0)
 	if _blink_left > 0.0:
 		_blink_left -= delta
 		_visual.visible = _blink_left <= 0.0 or fmod(_blink_left, BLINK_PERIOD * 2.0) < BLINK_PERIOD
@@ -156,7 +131,6 @@ func _handle_movement() -> void:
 
 	if _pause_left > 0.0:
 		velocity = Vector3.ZERO
-		_moving = false
 		return
 
 	var direction := Vector3.ZERO
@@ -176,7 +150,6 @@ func _handle_movement() -> void:
 	if direction != Vector3.ZERO:
 		_face(direction)
 	Steering.move(self, direction, move_speed)
-	_moving = direction != Vector3.ZERO
 
 
 func _melee() -> void:
@@ -184,7 +157,6 @@ func _melee() -> void:
 	_begin_attack(aim)
 	_melee_left = melee_cooldown
 	skill_used.emit(&"melee", melee_cooldown)
-	_play_attack(&"sword-slash" if has_sword else &"punch")
 	var half_angle := deg_to_rad(melee_angle * 0.5)
 	for node in get_tree().get_nodes_in_group("enemy"):
 		var enemy := node as Enemy
@@ -206,7 +178,6 @@ func _cast_missile() -> void:
 	_begin_attack(aim)
 	_missile_left = missile_cooldown
 	skill_used.emit(&"missile", missile_cooldown)
-	_play_attack(&"punch")
 	var missile := missile_scene.instantiate() as MagicMissile
 	missile.direction = aim
 	missile.damage = missile_damage
@@ -256,33 +227,12 @@ func _begin_attack(aim: Vector3) -> void:
 		_click_locked = true
 
 
-func _play_attack(anim_name: StringName) -> void:
-	_anim.play(anim_name, 0.05, _anim.get_animation(anim_name).length / attack_anim_time)
-	_anim_state = &"attack"
-	_attack_anim_left = attack_anim_time
-
-
-## 공격 동작이 끝났으면, 움직이는 중엔 달리기, 멈췄으면 달리기 동작의 한 자세로 세운다.
-func _update_animation() -> void:
-	if _attack_anim_left > 0.0:
-		return
-	if _moving:
-		if _anim_state != &"run":
-			_anim_state = &"run"
-			_anim.play(&"run", 0.1, run_anim_speed)
-	elif _anim_state != &"idle":
-		_anim_state = &"idle"
-		_anim.play(&"run", 0.1, 0.0)
-		_anim.seek(idle_pose_time, true)
-
-
 func _die() -> void:
 	_dead = true
 	velocity = Vector3.ZERO
 	_visual.visible = true
-	_anim.pause()
-	for mesh: MeshInstance3D in _visual.find_children("*", "MeshInstance3D", true, false):
-		mesh.material_override = Fx.solid(DEAD_COLOR)
+	for child in _visual.get_children():
+		(child as MeshInstance3D).material_override = Fx.solid(DEAD_COLOR)
 	var tween := create_tween().set_parallel().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.tween_property(_visual, "rotation:z", PI * 0.5, 0.4).set_ease(Tween.EASE_IN)
 	tween.tween_property(_visual, "position:y", body_radius(), 0.4)
